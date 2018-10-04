@@ -45,7 +45,7 @@ object Controller {
       .schema(trainSchema)
       .load(args(0))
 
-    topHotels.countPopularHotelsBetweenCouples(df);
+    topHotels.mostPopularHotelsBetweenCouples(df);
 
   }
 

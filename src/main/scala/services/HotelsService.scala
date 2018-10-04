@@ -5,10 +5,10 @@ import org.apache.spark.sql.functions.desc
 
 class HotelsService {
 
-  def countPopularHotelsBetweenCouples(df: DataFrame ) ={
+  def mostPopularHotelsBetweenCouples(df: DataFrame ) ={
     df.filter("srch_adults_cnt==2")
-      .select("hotel_continent", "hotel_market", "hotel_cluster")
-      .groupBy("hotel_continent", "hotel_market", "hotel_cluster")
+      .select("hotel_continent", "hotel_country", "hotel_market")
+      .groupBy("hotel_continent", "hotel_country", "hotel_market")
       .count()
       .orderBy(desc("count"))
       .limit(3)
@@ -20,14 +20,15 @@ class HotelsService {
       .groupBy("hotel_country")
       .count()
       .orderBy(desc("count"))
-      .limit(1)
+      .head
+      .getInt(0)
   }
 
-  def interetedButNotBooked(df: DataFrame)={
+  def mostInteretedButNotBooked(df: DataFrame)={
     df.filter("srch_children_cnt>0")
       .filter("is_booking==0")
-      .select("hotel_continent", "hotel_market", "hotel_cluster")
-      .groupBy("hotel_continent", "hotel_market", "hotel_cluster")
+      .select("hotel_continent", "hotel_country", "hotel_market")
+      .groupBy("hotel_continent", "hotel_country", "hotel_market")
       .count()
       .orderBy(desc("count"))
       .limit(3)
