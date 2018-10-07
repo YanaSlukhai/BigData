@@ -5,7 +5,7 @@ import org.specs2.mutable.SpecificationWithJUnit
 import services.HotelsService
 
 
-class TopHotelsForCouplesTest extends  SpecificationWithJUnit {
+class HotelsServiceTest extends  SpecificationWithJUnit {
 
   trait SparkScope extends Scope{
     def beTheDataset(expectedDf: DataFrame): Matcher[DataFrame] = {

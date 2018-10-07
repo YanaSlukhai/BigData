@@ -7,9 +7,17 @@ import services.HotelsService
 
 
 object Controller {
-  val topHotels = new HotelsService
+  val hotelsService = new HotelsService
 
   def  main(args: Array[String]): Unit = {
+
+    object Queries extends Enumeration {
+      type String = Value
+      val POPULAR_HOTELS_BETWEEN_COUPLES = Value("mostPopularHotelsBetweenCouples")
+      val POPULAR_BOOKED_AND_SEARCHED_COUNTRY= Value("mostPopularBookedAndSearchedCountry")
+      val INTERESTED_BUT_NOT_BOOKED = Value("mostInteretedButNotBooked")
+    }
+
     val spark = SparkSession.builder
       .master("local[*]")
       .appName("TopHotelsForCouples")
@@ -45,7 +53,17 @@ object Controller {
       .schema(trainSchema)
       .load(args(0))
 
-    topHotels.mostPopularHotelsBetweenCouples(df);
+    Queries.withName(args(0)) match
+    {
+      case Queries.INTERESTED_BUT_NOT_BOOKED
+      => hotelsService.mostInteretedButNotBooked(df)
+      case Queries.POPULAR_BOOKED_AND_SEARCHED_COUNTRY
+        => hotelsService.mostPopularBookedAndSearchedCountry(df)
+      case Queries.POPULAR_HOTELS_BETWEEN_COUPLES
+        => hotelsService.mostPopularHotelsBetweenCouples(df)
+      case _ => println("Parameter is not found")
+
+    }
 
   }
 
