@@ -4,11 +4,22 @@ import org.apache.spark.sql.{DataFrame, SparkSession}
 import org.apache.spark.sql.types.{DataTypes, Metadata, StructField, StructType}
 import services.HotelsService
 
-
+/**
+  * The  program implements an application that
+  * executes three queries required in Spark Core HW
+  *
+  * @author Yana Slukhai
+  * @version 1.0
+  * @since 2018-10-08
+  */
 
 object Controller {
   val hotelsService = new HotelsService
-
+  /**
+    * Executes appropriate query for the dataset defined
+    * args(0) - dataset path
+    * args(1) - query identifier
+    */
   def  main(args: Array[String]): Unit = {
 
     object Queries extends Enumeration {
@@ -47,20 +58,20 @@ object Controller {
       StructField("hotel_continent", DataTypes.IntegerType, true, Metadata.empty),
       StructField("hotel_country", DataTypes.IntegerType, true, Metadata.empty),
       StructField("hotel_market", DataTypes.IntegerType, true, Metadata.empty),
-      StructField("hotel_cluster", DataTypes.IntegerType, true, Metadata.empty)));
+      StructField("hotel_cluster", DataTypes.IntegerType, true, Metadata.empty)))
 
     val df = spark.read.format("csv")
       .schema(trainSchema)
       .load(args(0))
 
-    Queries.withName(args(0)) match
+    Queries.withName(args(1)) match
     {
       case Queries.INTERESTED_BUT_NOT_BOOKED
-      => hotelsService.mostInteretedButNotBooked(df)
+      => hotelsService.mostInteretedButNotBooked(df).show()
       case Queries.POPULAR_BOOKED_AND_SEARCHED_COUNTRY
-        => hotelsService.mostPopularBookedAndSearchedCountry(df)
+        => println(hotelsService.mostPopularBookedAndSearchedCountry(df))
       case Queries.POPULAR_HOTELS_BETWEEN_COUPLES
-        => hotelsService.mostPopularHotelsBetweenCouples(df)
+        => hotelsService.mostPopularHotelsBetweenCouples(df).show()
       case _ => println("Parameter is not found")
 
     }
